@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        First name: <input type="text" name="first_name"><br>
+        Last name: <input type="text" name="last_name"><br>
+        Username: <input type="text" name="username"><br>
+        Password: <input type="password" name="password"><br>
+        Email: <input type="email" name="email"><br>
+        Age: <input type="number" name="age"><br>
+        Phone: <input type="tel" name="phone"><br>
+        <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+</body>
+</html>
