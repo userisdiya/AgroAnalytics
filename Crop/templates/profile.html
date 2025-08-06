@@ -1,44 +1,60 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgroAnalytics - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0;
-            background-color: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-image: url("{% static 'Crop/images/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
         }
-        
+
+        /* --- Navbar Styles --- */
         .navbar {
-            background-color: #2e7d32;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: #1a202c;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         
         .navbar h1 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #15803d;
         }
-        
+
         .navbar a {
-            color: white;
+            color: #15803d;
             text-decoration: none;
             margin: 0 15px;
             padding: 8px 15px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            font-weight: 500;
         }
         
         .navbar a:hover {
-            background-color: rgba(255,255,255,0.2);
+            background-color: rgba(21, 128, 61, 0.1);
         }
         
         .profile-section {
@@ -48,35 +64,46 @@
         
         .profile-dropdown {
             position: relative;
+            padding-bottom: 0.75rem;
         }
         
         .profile-btn {
-            background: rgba(255,255,255,0.2);
+            background: #15803d;
             border: none;
             color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .profile-btn:hover {
+            background: #16a34a;
         }
         
         .profile-menu {
-            display: none;
+            opacity: 0;
+            visibility: hidden;
             position: absolute;
             right: 0;
-            top: 100%;
+            top: 100%; 
             background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 5px;
-            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            min-width: 160px;
             z-index: 1000;
+            overflow: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
         }
         
         .profile-menu a {
             display: block;
             color: #333;
-            padding: 10px 15px;
+            padding: 0.75rem 1rem;
             margin: 0;
             border-radius: 0;
         }
@@ -86,71 +113,91 @@
         }
         
         .profile-dropdown:hover .profile-menu {
-            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
-        
+
+        /* --- Main Content Card --- */
         .container {
-            background-color: white;
-            margin: 20px;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 2rem auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         
+        h2, h3 {
+            color: #15803d;
+            font-weight: 700;
+        }
+
         h2 {
-            color: #2e7d32;
-            margin-bottom: 20px;
+            font-size: 2.25rem;
+            margin-bottom: 2rem;
         }
-        
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
         .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
             border-left: 5px solid;
         }
         
         .alert-success {
-            background-color: #d4edda;
-            border-left-color: #28a745;
-            color: #155724;
+            background-color: #d1fae5;
+            border-left-color: #10b981;
+            color: #065f46;
         }
         
         .alert-error {
-            background-color: #f8d7da;
-            border-left-color: #dc3545;
-            color: #721c24;
+            background-color: #fee2e2;
+            border-left-color: #ef4444;
+            color: #991b1b;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
         }
         
         input[type="text"], input[type="email"], input[type="number"], input[type="password"] {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
             box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            font-size: 1rem;
+            background-color: rgba(249, 250, 251, 0.9);
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
         
         input:focus {
             outline: none;
-            border-color: #4caf50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+            background-color: #ffffff;
         }
         
         .form-row {
             display: flex;
-            gap: 20px;
+            gap: 2rem;
         }
         
         .form-row .form-group {
@@ -158,46 +205,42 @@
         }
         
         button {
-            background-color: #4caf50;
+            background-color: #16a34a;
             color: white;
-            padding: 12px 24px;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 0.5rem;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: 600;
             margin-right: 10px;
+            transition: background-color 0.3s;
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: #15803d;
         }
         
         .btn-secondary {
-            background-color: #6c757d;
+            background-color: #6b7280;
         }
         
         .btn-secondary:hover {
-            background-color: #5a6268;
+            background-color: #4b5563;
         }
         
         .profile-info {
-            background-color: #e8f5e8;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid #4caf50;
-        }
-        
-        .profile-info h3 {
-            margin: 0 0 15px 0;
-            color: #2e7d32;
+            background-color: #e8f5e9; /* Changed to light green */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2.5rem;
         }
         
         .info-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #ddd;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #d1fae5; /* Adjusted border color */
         }
         
         .info-item:last-child {
@@ -205,12 +248,12 @@
         }
         
         .info-label {
-            font-weight: bold;
-            color: #555;
+            font-weight: 600;
+            color: #4b5563;
         }
         
         .info-value {
-            color: #333;
+            color: #1f2937;
         }
     </style>
 </head>
@@ -248,7 +291,7 @@
         
         <!-- Current Profile Information -->
         <div class="profile-info">
-            <h3>Current Profile Information</h3>
+            <h3>Current Information</h3>
             <div class="info-item">
                 <span class="info-label">Name:</span>
                 <span class="info-value">{{ user.First_Name }} {{ user.Last_Name }}</span>
@@ -308,9 +351,9 @@
                 <input type="password" id="password" name="password" placeholder="Enter new password or leave blank">
             </div>
             
-            <button type="submit">💾 Update Profile</button>
+            <button type="submit"> Update Profile</button>
             <a href="{% url 'home' %}">
-                <button type="button" class="btn-secondary">🔙 Back to Home</button>
+                <button type="button">  Back to Home  </button>
             </a>
         </form>
     </div>
