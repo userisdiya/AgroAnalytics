@@ -16,6 +16,10 @@ import os
 
 # Create your views here.
 def signup(request):
+    # If user is already logged in, redirect to home
+    if 'user_id' in request.session:
+        return redirect("home")
+    
     # If the request is a POST, process the form data
     if request.method == "POST":
         # Create a new Student object with the submitted username, email, and password
@@ -34,14 +38,21 @@ def signup(request):
     return render(request,"signup.html")
 
 def login(request):
+    # If user is already logged in, redirect to home
+    if 'user_id' in request.session:
+        return redirect("home")
+    
     # If the request is a POST, process the login form data
     if request.method == "POST":
         # Retrieve the username and password from the submitted form
         username = request.POST["username"]
         password = request.POST["password"]
         # Check if a user with the given username and password exists
-        user = User.objects.filter(Username=username, Password=password)
+        user = User.objects.filter(Username=username, Password=password).first()
         if user:
+            # Store user info in session
+            request.session['user_id'] = user.id
+            request.session['username'] = user.Username
             # If user exists, redirect to the home page
             return redirect("home")
         else:
@@ -51,10 +62,17 @@ def login(request):
     return render(request, "login.html")
 
 def home(request):
+    # Check if user is logged in
+    if 'user_id' not in request.session:
+        return redirect("login")
+    
+    # Get user info from session
+    user = User.objects.get(id=request.session['user_id'])
+    
     # Check if this is a prediction request (has parameters)
     if not any(param in request.GET for param in ['nitrogen', 'phosphorus', 'potassium', 'ph', 'city']):
         # No parameters provided, show the form
-        return render(request, 'home.html')
+        return render(request, 'home.html', {'user': user})
 
     # Load dataset
     csv_path = os.path.join(settings.BASE_DIR, 'crop', 'Crop_recommendation.csv')
@@ -252,9 +270,56 @@ def home(request):
         }
     }
 
+    # Add user to context
+    context['user'] = user
+    
     # Return JSON response if requested
     if request.headers.get('Content-Type') == 'application/json' or request.GET.get('format') == 'json':
         return JsonResponse(context)
 
     return render(request, 'home.html', context)
 
+def profile(request):
+    # Check if user is logged in
+    if 'user_id' not in request.session:
+        return redirect("login")
+    
+    user = User.objects.get(id=request.session['user_id'])
+    
+    # Handle profile update
+    if request.method == "POST":
+        try:
+            user.First_Name = request.POST["first_name"]
+            user.Last_Name = request.POST["last_name"]
+            user.Email = request.POST["email"]
+            user.Age = request.POST["age"]
+            user.Phone_Number = request.POST["phone"]
+            
+            # Only update password if provided
+            new_password = request.POST.get("password")
+            if new_password and new_password.strip():
+                user.Password = new_password
+            
+            user.save()
+            
+            return render(request, 'profile.html', {
+                'user': user, 
+                'success': 'Profile updated successfully!'
+            })
+        except Exception as e:
+            return render(request, 'profile.html', {
+                'user': user, 
+                'error': f'Error updating profile: {str(e)}'
+            })
+    
+    return render(request, 'profile.html', {'user': user})
+
+def logout(request):
+    # Clear the session
+    if 'user_id' in request.session:
+        del request.session['user_id']
+    if 'username' in request.session:
+        del request.session['username']
+    
+    # Redirect to login page
+    return redirect("login")

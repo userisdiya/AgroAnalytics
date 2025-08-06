@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroAnalytics - Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            background-color: #2e7d32;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-dropdown {
+            position: relative;
+        }
+        
+        .profile-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            min-width: 150px;
+            z-index: 1000;
+        }
+        
+        .profile-menu a {
+            display: block;
+            color: #333;
+            padding: 10px 15px;
+            margin: 0;
+            border-radius: 0;
+        }
+        
+        .profile-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .profile-dropdown:hover .profile-menu {
+            display: block;
+        }
+        
+        .container {
+            background-color: white;
+            margin: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 5px solid;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input[type="text"], input[type="email"], input[type="number"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .profile-info {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .profile-info h3 {
+            margin: 0 0 15px 0;
+            color: #2e7d32;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🌱 AgroAnalytics</h1>
+        <div class="profile-section">
+            <a href="{% url 'home' %}">🏠 Home</a>
+            <div class="profile-dropdown">
+                <button class="profile-btn">
+                    👤 {{ user.First_Name }} {{ user.Last_Name }} ▼
+                </button>
+                <div class="profile-menu">
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>👤 My Profile</h2>
+        
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        {% endif %}
+        
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <!-- Current Profile Information -->
+        <div class="profile-info">
+            <h3>Current Profile Information</h3>
+            <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value">{{ user.First_Name }} {{ user.Last_Name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Username:</span>
+                <span class="info-value">{{ user.Username }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ user.Email }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Age:</span>
+                <span class="info-value">{{ user.Age }} years old</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value">{{ user.Phone_Number }}</span>
+            </div>
+        </div>
+        
+        <!-- Edit Profile Form -->
+        <h3>Edit Profile</h3>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ user.First_Name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ user.Last_Name }}" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.Email }}" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" value="{{ user.Age }}" min="1" max="120" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="text" id="phone" name="phone" value="{{ user.Phone_Number }}" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">New Password (leave blank to keep current):</label>
+                <input type="password" id="password" name="password" placeholder="Enter new password or leave blank">
+            </div>
+            
+            <button type="submit">💾 Update Profile</button>
+            <a href="{% url 'home' %}">
+                <button type="button" class="btn-secondary">🔙 Back to Home</button>
+            </a>
+        </form>
+    </div>
+</body>
+</html>
