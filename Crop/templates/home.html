@@ -30,12 +30,35 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="number"] {
+        input[type="number"], input[type="text"], select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        select {
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        
+        optgroup {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        option {
+            font-weight: normal;
+            color: #333;
+            padding: 5px;
         }
         button {
             background-color: #4caf50;
@@ -92,12 +115,156 @@
         
         <form id="cropForm">
             <div class="form-group">
-                <label for="lat">Latitude:</label>
-                <input type="number" id="lat" name="lat" placeholder="Enter latitude (e.g., 28.6139)" step="any" required>
-            </div>
-            <div class="form-group">
-                <label for="lon">Longitude:</label>
-                <input type="number" id="lon" name="lon" placeholder="Enter longitude (e.g., 77.2090)" step="any" required>
+                <label for="city">City:</label>
+                <select id="city" name="city" required>
+                    <option value="">-- Select a City --</option>
+                    <!-- Major Cities -->
+                    <optgroup label="Major Cities">
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Jaipur">Jaipur</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Lucknow">Lucknow</option>
+                        <option value="Kanpur">Kanpur</option>
+                        <option value="Nagpur">Nagpur</option>
+                        <option value="Indore">Indore</option>
+                        <option value="Thane">Thane</option>
+                        <option value="Bhopal">Bhopal</option>
+                        <option value="Visakhapatnam">Visakhapatnam</option>
+                        <option value="Pimpri-Chinchwad">Pimpri-Chinchwad</option>
+                        <option value="Patna">Patna</option>
+                        <option value="Vadodara">Vadodara</option>
+                        <option value="Ghaziabad">Ghaziabad</option>
+                        <option value="Ludhiana">Ludhiana</option>
+                        <option value="Agra">Agra</option>
+                        <option value="Nashik">Nashik</option>
+                        <option value="Faridabad">Faridabad</option>
+                        <option value="Meerut">Meerut</option>
+                        <option value="Rajkot">Rajkot</option>
+                        <option value="Kalyan-Dombivali">Kalyan-Dombivali</option>
+                        <option value="Vasai-Virar">Vasai-Virar</option>
+                        <option value="Varanasi">Varanasi</option>
+                        <option value="Srinagar">Srinagar</option>
+                        <option value="Aurangabad">Aurangabad</option>
+                        <option value="Dhanbad">Dhanbad</option>
+                        <option value="Amritsar">Amritsar</option>
+                        <option value="Navi Mumbai">Navi Mumbai</option>
+                        <option value="Allahabad">Allahabad</option>
+                        <option value="Ranchi">Ranchi</option>
+                        <option value="Howrah">Howrah</option>
+                        <option value="Coimbatore">Coimbatore</option>
+                        <option value="Jabalpur">Jabalpur</option>
+                        <option value="Gwalior">Gwalior</option>
+                        <option value="Vijayawada">Vijayawada</option>
+                        <option value="Jodhpur">Jodhpur</option>
+                        <option value="Madurai">Madurai</option>
+                        <option value="Raipur">Raipur</option>
+                        <option value="Kota">Kota</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Guwahati">Guwahati</option>
+                        <option value="Solapur">Solapur</option>
+                        <option value="Hubli-Dharwad">Hubli-Dharwad</option>
+                        <option value="Bareilly">Bareilly</option>
+                        <option value="Moradabad">Moradabad</option>
+                        <option value="Mysore">Mysore</option>
+                        <option value="Gurgaon">Gurgaon</option>
+                        <option value="Aligarh">Aligarh</option>
+                        <option value="Jalandhar">Jalandhar</option>
+                        <option value="Tiruchirappalli">Tiruchirappalli</option>
+                        <option value="Bhubaneswar">Bhubaneswar</option>
+                        <option value="Salem">Salem</option>
+                        <option value="Warangal">Warangal</option>
+                        <option value="Mira-Bhayandar">Mira-Bhayandar</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Bhiwandi">Bhiwandi</option>
+                        <option value="Saharanpur">Saharanpur</option>
+                        <option value="Gorakhpur">Gorakhpur</option>
+                        <option value="Guntur">Guntur</option>
+                        <option value="Bikaner">Bikaner</option>
+                        <option value="Amravati">Amravati</option>
+                        <option value="Noida">Noida</option>
+                        <option value="Jamshedpur">Jamshedpur</option>
+                        <option value="Bhilai">Bhilai</option>
+                        <option value="Cuttack">Cuttack</option>
+                        <option value="Firozabad">Firozabad</option>
+                        <option value="Kochi">Kochi</option>
+                        <option value="Bhavnagar">Bhavnagar</option>
+                        <option value="Dehradun">Dehradun</option>
+                        <option value="Durgapur">Durgapur</option>
+                        <option value="Asansol">Asansol</option>
+                        <option value="Nanded">Nanded</option>
+                        <option value="Kolhapur">Kolhapur</option>
+                        <option value="Ajmer">Ajmer</option>
+                        <option value="Gulbarga">Gulbarga</option>
+                        <option value="Jamnagar">Jamnagar</option>
+                        <option value="Ujjain">Ujjain</option>
+                        <option value="Loni">Loni</option>
+                        <option value="Siliguri">Siliguri</option>
+                        <option value="Jhansi">Jhansi</option>
+                        <option value="Ulhasnagar">Ulhasnagar</option>
+                        <option value="Nellore">Nellore</option>
+                        <option value="Jammu">Jammu</option>
+                        <option value="Sangli-Miraj & Kupwad">Sangli-Miraj & Kupwad</option>
+                        <option value="Belgaum">Belgaum</option>
+                        <option value="Mangalore">Mangalore</option>
+                        <option value="Ambattur">Ambattur</option>
+                        <option value="Tirunelveli">Tirunelveli</option>
+                        <option value="Malegaon">Malegaon</option>
+                        <option value="Gaya">Gaya</option>
+                        <option value="Jalgaon">Jalgaon</option>
+                        <option value="Udaipur">Udaipur</option>
+                        <option value="Maheshtala">Maheshtala</option>
+                    </optgroup>
+                    
+                    <!-- State Capitals -->
+                    <optgroup label="State Capitals">
+                        <option value="Gandhinagar">Gandhinagar (Gujarat)</option>
+                        <option value="Panaji">Panaji (Goa)</option>
+                        <option value="Shimla">Shimla (Himachal Pradesh)</option>
+                        <option value="Imphal">Imphal (Manipur)</option>
+                        <option value="Shillong">Shillong (Meghalaya)</option>
+                        <option value="Aizawl">Aizawl (Mizoram)</option>
+                        <option value="Kohima">Kohima (Nagaland)</option>
+                        <option value="Gangtok">Gangtok (Sikkim)</option>
+                        <option value="Agartala">Agartala (Tripura)</option>
+                        <option value="Itanagar">Itanagar (Arunachal Pradesh)</option>
+                        <option value="Dispur">Dispur (Assam)</option>
+                    </optgroup>
+                    
+                    <!-- Agricultural Centers -->
+                    <optgroup label="Agricultural Centers">
+                        <option value="Amritsar">Amritsar (Punjab)</option>
+                        <option value="Bathinda">Bathinda (Punjab)</option>
+                        <option value="Patiala">Patiala (Punjab)</option>
+                        <option value="Karnal">Karnal (Haryana)</option>
+                        <option value="Hisar">Hisar (Haryana)</option>
+                        <option value="Rohtak">Rohtak (Haryana)</option>
+                        <option value="Meerut">Meerut (UP)</option>
+                        <option value="Muzaffarnagar">Muzaffarnagar (UP)</option>
+                        <option value="Ahmednagar">Ahmednagar (Maharashtra)</option>
+                        <option value="Sangli">Sangli (Maharashtra)</option>
+                        <option value="Latur">Latur (Maharashtra)</option>
+                        <option value="Osmanabad">Osmanabad (Maharashtra)</option>
+                        <option value="Kurnool">Kurnool (Andhra Pradesh)</option>
+                        <option value="Anantapur">Anantapur (Andhra Pradesh)</option>
+                        <option value="Bellary">Bellary (Karnataka)</option>
+                        <option value="Gulbarga">Gulbarga (Karnataka)</option>
+                        <option value="Hassan">Hassan (Karnataka)</option>
+                        <option value="Mandya">Mandya (Karnataka)</option>
+                        <option value="Erode">Erode (Tamil Nadu)</option>
+                        <option value="Thanjavur">Thanjavur (Tamil Nadu)</option>
+                        <option value="Nagapattinam">Nagapattinam (Tamil Nadu)</option>
+                        <option value="Palakkad">Palakkad (Kerala)</option>
+                        <option value="Alappuzha">Alappuzha (Kerala)</option>
+                        <option value="Kottayam">Kottayam (Kerala)</option>
+                    </optgroup>
+                </select>
             </div>
             <div class="form-group">
                 <label for="nitrogen">Nitrogen (N):</label>
@@ -142,6 +309,8 @@
             {% if input_data %}
             <div class="debug-info">
                 <strong>Input Values Used:</strong><br>
+                Location: {{ input_data.city }}{% if input_data.state %}, {{ input_data.state }}{% endif %}, {{ input_data.country }}<br>
+                Coordinates: {{ input_data.latitude|floatformat:4 }}°, {{ input_data.longitude|floatformat:4 }}°<br>
                 N: {{ input_data.nitrogen }}, P: {{ input_data.phosphorus }}, K: {{ input_data.potassium }}, pH: {{ input_data.ph }}<br>
                 Temperature: {{ input_data.temperature }}°C, Humidity: {{ input_data.humidity }}%, Rainfall: {{ input_data.rainfall }}mm<br>
                 Weather Source: {{ input_data.weather_source }}

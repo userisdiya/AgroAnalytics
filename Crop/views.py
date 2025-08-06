@@ -52,7 +52,7 @@ def login(request):
 
 def home(request):
     # Check if this is a prediction request (has parameters)
-    if not any(param in request.GET for param in ['nitrogen', 'phosphorus', 'potassium', 'ph', 'lat', 'lon']):
+    if not any(param in request.GET for param in ['nitrogen', 'phosphorus', 'potassium', 'ph', 'city']):
         # No parameters provided, show the form
         return render(request, 'home.html')
 
@@ -81,8 +81,7 @@ def home(request):
         phosphorus = request.GET['phosphorus']
         potassium = request.GET['potassium']
         ph = request.GET['ph']
-        lat = request.GET['lat']
-        lon = request.GET['lon']
+        city = request.GET['city']
     except KeyError as e:
         return JsonResponse({'error': f'Missing required parameter: {e.args[0]}'}, status=400)
 
@@ -92,15 +91,35 @@ def home(request):
         phosphorus = float(phosphorus)
         potassium = float(potassium)
         ph = float(ph)
-        lat = float(lat)
-        lon = float(lon)
+        city = city.strip()  # Remove any extra spaces
+        if not city:
+            return JsonResponse({'error': 'City name cannot be empty'}, status=400)
     except ValueError as e:
-        return JsonResponse({'error': f'Invalid parameter value. All inputs must be numeric.'}, status=400)
+        return JsonResponse({'error': f'Invalid parameter value. Nitrogen, Phosphorus, Potassium, and pH must be numeric.'}, status=400)
 
     # OpenWeatherMap API key (replace with your actual key)
     api_key = '415ba6cfae13440c33af57516e83c925'  # Replace with your API key
 
-    # Fetch weather data
+    # First, get coordinates from city name using Geocoding API
+    try:
+        geo_url = f'http://api.openweathermap.org/geo/1.0/direct?q={city}&appid={api_key}'
+        geo_response = requests.get(geo_url)
+        geo_response.raise_for_status()
+        geo_data = geo_response.json()
+        
+        if not geo_data:
+            return JsonResponse({'error': f'City "{city}" not found. Please check the spelling and try again.'}, status=400)
+        
+        # Get coordinates from the first result
+        lat = geo_data[0]['lat']
+        lon = geo_data[0]['lon']
+        country = geo_data[0].get('country', 'Unknown')
+        state = geo_data[0].get('state', '')
+        
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to get coordinates for city "{city}": {str(e)}'}, status=400)
+
+    # Fetch weather data using coordinates
     try:
         url = f'http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric'
         response = requests.get(url)
@@ -163,7 +182,7 @@ def home(request):
         
         weather_source = "OpenWeatherMap API"
     except Exception as e:
-        return JsonResponse({'error': f'Failed to fetch weather data: {str(e)}. Please check your API key and coordinates.'}, status=400)
+        return JsonResponse({'error': f'Failed to fetch weather data for "{city}": {str(e)}. Please check your API key and city name.'}, status=400)
 
     # Prepare features for prediction
     feature_names = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
@@ -224,6 +243,9 @@ def home(request):
             'temperature': temperature,
             'humidity': humidity,
             'rainfall': rainfall,
+            'city': city,
+            'country': country,
+            'state': state,
             'latitude': lat,
             'longitude': lon,
             'weather_source': weather_source
