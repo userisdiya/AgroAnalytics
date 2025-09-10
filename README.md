@@ -327,7 +327,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support, feature requests, or bug reports:
 - Create an issue on GitHub
-- Contact: [nerdyADITYA](https://github.com/userisdiya)
+- Contact: [userisdiya](https://github.com/userisdiya)
 
 ## 🔮 Future Enhancements
 
