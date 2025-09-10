@@ -1,0 +1,482 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroAnalytics - Crop Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-image: url("{% static 'Crop/images/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        /* --- New Navbar Styles --- */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #1a202c;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #15803d;
+        }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-dropdown {
+            position: relative;
+            /* Added padding to extend hover area below the button */
+            padding-bottom: 0.75rem;
+        }
+        
+        .profile-btn {
+            background: #15803d;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .profile-btn:hover {
+            background: #16a34a;
+        }
+        
+        .profile-menu {
+            /* Changed from display:none to opacity for transition */
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            right: 0;
+            /* Positioned right below the button */
+            top: 100%; 
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            min-width: 160px;
+            z-index: 1000;
+            overflow: hidden;
+            /* Added transition for smooth appearance */
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        }
+        
+        .profile-menu a {
+            display: block;
+            color: #333;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .profile-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .profile-dropdown:hover .profile-menu {
+            /* Changed from display:block to opacity for transition */
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* --- Main Content Card --- */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .container h1 {
+            color: #15803d;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: rgba(249, 250, 251, 0.9);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+            background-color: #ffffff;
+        }
+        
+        button {
+            background-color: #16a34a;
+            color: white;
+            padding: 0.85rem 1.5rem;
+            border: 1px solid transparent;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: #16a34a;
+            border: 1px solid #16a34a;
+        }
+        
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #e8f5e9;
+            border-radius: 0.5rem;
+            border-left: 5px solid #4caf50;
+        }
+
+        .result h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #15803d;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f0f0f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #666;
+            word-break: break-all;
+        }
+        .top-predictions {
+            margin-top: 1rem;
+        }
+        .prediction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .prediction-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🌱 AgroAnalytics</h1>
+        <div class="profile-section">
+            {% if user %}
+            <div class="profile-dropdown">
+                <button class="profile-btn">
+                    👤 {{ user.First_Name }} {{ user.Last_Name }} ▼
+                </button>
+                <div class="profile-menu">
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>🌱 Crop Prediction</h1>
+        
+        <form id="cropForm">
+            <div class="form-group">
+                <label for="city">City:</label>
+                <select id="city" name="city" required>
+                    <option value="">-- Select a City --</option>
+                    <optgroup label="Major Cities">
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Jaipur">Jaipur</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Lucknow">Lucknow</option>
+                        <option value="Kanpur">Kanpur</option>
+                        <option value="Nagpur">Nagpur</option>
+                        <option value="Indore">Indore</option>
+                        <option value="Thane">Thane</option>
+                        <option value="Bhopal">Bhopal</option>
+                        <option value="Visakhapatnam">Visakhapatnam</option>
+                        <option value="Pimpri-Chinchwad">Pimpri-Chinchwad</option>
+                        <option value="Patna">Patna</option>
+                        <option value="Vadodara">Vadodara</option>
+                        <option value="Ghaziabad">Ghaziabad</option>
+                        <option value="Ludhiana">Ludhiana</option>
+                        <option value="Agra">Agra</option>
+                        <option value="Nashik">Nashik</option>
+                        <option value="Faridabad">Faridabad</option>
+                        <option value="Meerut">Meerut</option>
+                        <option value="Rajkot">Rajkot</option>
+                        <option value="Kalyan-Dombivali">Kalyan-Dombivali</option>
+                        <option value="Vasai-Virar">Vasai-Virar</option>
+                        <option value="Varanasi">Varanasi</option>
+                        <option value="Srinagar">Srinagar</option>
+                        <option value="Aurangabad">Aurangabad</option>
+                        <option value="Dhanbad">Dhanbad</option>
+                        <option value="Amritsar">Amritsar</option>
+                        <option value="Navi Mumbai">Navi Mumbai</option>
+                        <option value="Allahabad">Allahabad</option>
+                        <option value="Ranchi">Ranchi</option>
+                        <option value="Howrah">Howrah</option>
+                        <option value="Coimbatore">Coimbatore</option>
+                        <option value="Jabalpur">Jabalpur</option>
+                        <option value="Gwalior">Gwalior</option>
+                        <option value="Vijayawada">Vijayawada</option>
+                        <option value="Jodhpur">Jodhpur</option>
+                        <option value="Madurai">Madurai</option>
+                        <option value="Raipur">Raipur</option>
+                        <option value="Kota">Kota</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Guwahati">Guwahati</option>
+                        <option value="Solapur">Solapur</option>
+                        <option value="Hubli-Dharwad">Hubli-Dharwad</option>
+                        <option value="Bareilly">Bareilly</option>
+                        <option value="Moradabad">Moradabad</option>
+                        <option value="Mysore">Mysore</option>
+                        <option value="Gurgaon">Gurgaon</option>
+                        <option value="Aligarh">Aligarh</option>
+                        <option value="Jalandhar">Jalandhar</option>
+                        <option value="Tiruchirappalli">Tiruchirappalli</option>
+                        <option value="Bhubaneswar">Bhubaneswar</option>
+                        <option value="Salem">Salem</option>
+                        <option value="Warangal">Warangal</option>
+                        <option value="Mira-Bhayandar">Mira-Bhayandar</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Bhiwandi">Bhiwandi</option>
+                        <option value="Saharanpur">Saharanpur</option>
+                        <option value="Gorakhpur">Gorakhpur</option>
+                        <option value="Guntur">Guntur</option>
+                        <option value="Bikaner">Bikaner</option>
+                        <option value="Amravati">Amravati</option>
+                        <option value="Noida">Noida</option>
+                        <option value="Jamshedpur">Jamshedpur</option>
+                        <option value="Bhilai">Bhilai</option>
+                        <option value="Cuttack">Cuttack</option>
+                        <option value="Firozabad">Firozabad</option>
+                        <option value="Kochi">Kochi</option>
+                        <option value="Bhavnagar">Bhavnagar</option>
+                        <option value="Dehradun">Dehradun</option>
+                        <option value="Durgapur">Durgapur</option>
+                        <option value="Asansol">Asansol</option>
+                        <option value="Nanded">Nanded</option>
+                        <option value="Kolhapur">Kolhapur</option>
+                        <option value="Ajmer">Ajmer</option>
+                        <option value="Gulbarga">Gulbarga</option>
+                        <option value="Jamnagar">Jamnagar</option>
+                        <option value="Ujjain">Ujjain</option>
+                        <option value="Loni">Loni</option>
+                        <option value="Siliguri">Siliguri</option>
+                        <option value="Jhansi">Jhansi</option>
+                        <option value="Ulhasnagar">Ulhasnagar</option>
+                        <option value="Nellore">Nellore</option>
+                        <option value="Jammu">Jammu</option>
+                        <option value="Sangli-Miraj & Kupwad">Sangli-Miraj & Kupwad</option>
+                        <option value="Belgaum">Belgaum</option>
+                        <option value="Mangalore">Mangalore</option>
+                        <option value="Ambattur">Ambattur</option>
+                        <option value="Tirunelveli">Tirunelveli</option>
+                        <option value="Malegaon">Malegaon</option>
+                        <option value="Gaya">Gaya</option>
+                        <option value="Jalgaon">Jalgaon</option>
+                        <option value="Udaipur">Udaipur</option>
+                        <option value="Maheshtala">Maheshtala</option>
+                    </optgroup>
+                    
+                    <optgroup label="State Capitals">
+                        <option value="Gandhinagar">Gandhinagar (Gujarat)</option>
+                        <option value="Panaji">Panaji (Goa)</option>
+                        <option value="Shimla">Shimla (Himachal Pradesh)</option>
+                        <option value="Imphal">Imphal (Manipur)</option>
+                        <option value="Shillong">Shillong (Meghalaya)</option>
+                        <option value="Aizawl">Aizawl (Mizoram)</option>
+                        <option value="Kohima">Kohima (Nagaland)</option>
+                        <option value="Gangtok">Gangtok (Sikkim)</option>
+                        <option value="Agartala">Agartala (Tripura)</option>
+                        <option value="Itanagar">Itanagar (Arunachal Pradesh)</option>
+                        <option value="Dispur">Dispur (Assam)</option>
+                    </optgroup>
+                    
+                    <optgroup label="Agricultural Centers">
+                        <option value="Amritsar">Amritsar (Punjab)</option>
+                        <option value="Bathinda">Bathinda (Punjab)</option>
+                        <option value="Patiala">Patiala (Punjab)</option>
+                        <option value="Karnal">Karnal (Haryana)</option>
+                        <option value="Hisar">Hisar (Haryana)</option>
+                        <option value="Rohtak">Rohtak (Haryana)</option>
+                        <option value="Meerut">Meerut (UP)</option>
+                        <option value="Muzaffarnagar">Muzaffarnagar (UP)</option>
+                        <option value="Ahmednagar">Ahmednagar (Maharashtra)</option>
+                        <option value="Sangli">Sangli (Maharashtra)</option>
+                        <option value="Latur">Latur (Maharashtra)</option>
+                        <option value="Osmanabad">Osmanabad (Maharashtra)</option>
+                        <option value="Kurnool">Kurnool (Andhra Pradesh)</option>
+                        <option value="Anantapur">Anantapur (Andhra Pradesh)</option>
+                        <option value="Bellary">Bellary (Karnataka)</option>
+                        <option value="Gulbarga">Gulbarga (Karnataka)</option>
+                        <option value="Hassan">Hassan (Karnataka)</option>
+                        <option value="Mandya">Mandya (Karnataka)</option>
+                        <option value="Erode">Erode (Tamil Nadu)</option>
+                        <option value="Thanjavur">Thanjavur (Tamil Nadu)</option>
+                        <option value="Nagapattinam">Nagapattinam (Tamil Nadu)</option>
+                        <option value="Palakkad">Palakkad (Kerala)</option>
+                        <option value="Alappuzha">Alappuzha (Kerala)</option>
+                        <option value="Kottayam">Kottayam (Kerala)</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nitrogen">Nitrogen (N):</label>
+                <input type="number" id="nitrogen" name="nitrogen" placeholder="Nitrogen content (e.g., 90)" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="phosphorus">Phosphorus (P):</label>
+                <input type="number" id="phosphorus" name="phosphorus" placeholder="Phosphorus content (e.g., 42)" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="potassium">Potassium (K):</label>
+                <input type="number" id="potassium" name="potassium" placeholder="Potassium content (e.g., 43)" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="ph">pH Value:</label>
+                <input type="number" id="ph" name="ph" placeholder="Soil pH value (e.g., 6.5)" step="0.1" min="0" max="14" required>
+            </div>
+            <button type="submit">🔍 Predict Best Crop</button>
+        </form>
+
+        {% if best_crop %}
+        <div class="result">
+            <h2>🌱 Recommended Crop: {{ best_crop|title }}</h2>
+            <p><strong>Confidence:</strong> {{ confidence|floatformat:2 }}%</p>
+            
+            {% if accuracy %}
+            <p><strong>Model Accuracy:</strong> {{ accuracy|floatformat:2 }}%</p>
+            {% endif %}
+            
+            {% if top5_crops %}
+            <div class="top-predictions">
+                <h4>Top 5 Crop Recommendations:</h4>
+                {% for crop, probability in top5_crops %}
+                <div class="prediction-item">
+                    <span>{{ crop|title }}</span>
+                    <span>{{ probability|floatformat:2 }}%</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if input_data %}
+            <div class="debug-info">
+                <strong>Input Values Used:</strong><br>
+                Location: {{ input_data.city }}{% if input_data.state %}, {{ input_data.state }}{% endif %}, {{ input_data.country }}<br>
+                Coordinates: {{ input_data.latitude|floatformat:4 }}°, {{ input_data.longitude|floatformat:4 }}°<br>
+                N: {{ input_data.nitrogen }}, P: {{ input_data.phosphorus }}, K: {{ input_data.potassium }}, pH: {{ input_data.ph }}<br>
+                Temperature: {{ input_data.temperature }}°C, Humidity: {{ input_data.humidity }}%, Rainfall: {{ input_data.rainfall }}mm<br>
+                Weather Source: {{ input_data.weather_source }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if plot_data %}
+        <div class="chart-container">
+            <h3>📊 Top 5 Crop Recommendations</h3>
+            <img src="data:image/png;base64,{{ plot_data }}" alt="Crop Recommendation Chart">
+        </div>
+        {% endif %}
+
+        <div id="results"></div>
+
+        <script>
+        document.getElementById('cropForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const params = new URLSearchParams();
+            
+            for (let [key, value] of formData.entries()) {
+                params.append(key, value);
+            }
+            
+            // Show loading message
+            document.getElementById('results').innerHTML = '<p>Loading prediction...</p>';
+            
+            // Make request to the same URL with parameters
+            window.location.href = '?' + params.toString();
+        });
+        </script>
+    </div>
+</body>
+</html>
